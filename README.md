@@ -1,2 +1,1 @@
-# fcc-url-shortener
-freeCodeCamp APIs and Microservices Project 3 - URL Shortener Microservice
+# [URL Shortener Microservice](https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/url-shortener-microservice)
