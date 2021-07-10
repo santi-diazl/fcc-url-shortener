@@ -14,7 +14,7 @@ exports.add_new_url = [
     // get validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ error: "invalid URL" });
+      return res.status(400).json({ error: "invalid url" });
     }
     // get url
     counter.findOneAndUpdate(
