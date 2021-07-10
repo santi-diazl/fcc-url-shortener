@@ -14,7 +14,7 @@ exports.add_new_url = [
     // get validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ error: "Invalid URL" });
+      return res.status(400).json({ error: "invalid URL" });
     }
     // get url
     counter.findOneAndUpdate(
@@ -41,10 +41,8 @@ exports.add_new_url = [
 
 // api/urlshortener/:short_url
 exports.redir_to_url = (req, res, next) => {
-  console.log(req.params.short_url);
   URL.findOne({ short_url: req.params.short_url }, "long_url", (err, data) => {
     if (err) return console.error(err);
-    console.log(data.long_url);
     res.redirect(data.long_url);
   });
 };
