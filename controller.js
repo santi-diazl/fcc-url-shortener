@@ -9,8 +9,8 @@ const dns = require("dns");
 exports.add_new_url = [
   // check for protocol and WWW
   (req, res, next) => {
-    const urlPattern = /^http(s?):\/\/www\./;
-    if (!req.body.url.match(urlPattern)) {
+    const url = new URL(req.body.url);
+    if (!url.protocol.startsWith("http")) {
       return res.status(400).json({ error: "invalid url" });
     }
     // console.log(`URL is ${req.body.url}`);
