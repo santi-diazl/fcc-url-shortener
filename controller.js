@@ -7,11 +7,12 @@ const dns = require("dns");
 
 // POST request to /api/shorturl/
 exports.add_new_url = [
+  console.log(`Submitted URL: ${req.body.url}`),
   // check for protocol and WWW
   (req, res, next) => {
     const url = new URL(req.body.url);
     if (!url.protocol.startsWith("http")) {
-      return res.status(400).json({ error: "invalid url" });
+      return res.json({ error: "invalid url" });
     }
     // console.log(`URL is ${req.body.url}`);
     req.body.hostName = new URL(req.body.url).hostname.replace("www.", "");
@@ -22,7 +23,7 @@ exports.add_new_url = [
   (req, res, next) => {
     dns.lookup(req.body.hostName, (err) => {
       // console.log(`THIS IS THE ERROR: ${err}`);
-      if (err) return res.status(400).json({ error: "invalid url" });
+      if (err) return res.json({ error: "invalid url" });
     });
     return next();
   },
