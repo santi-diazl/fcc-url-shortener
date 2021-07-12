@@ -7,16 +7,18 @@ const { body, validationResult } = require("express-validator");
 
 // URL Post controller
 exports.add_new_url = [
-  // validate that it is proper URL
+  // validate URL
   body("url").isURL({ require_protocol: true }),
-
+  // process request
   (req, res, next) => {
+    console.log(`Submitted URL: ${req.body.url}`);
     // get validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      // not a valid URL
       return res.status(400).json({ error: "invalid url" });
     }
-    // get url
+    // get a new number
     counter.findOneAndUpdate(
       { _id: "URL Counter" },
       { $inc: { seq_value: 1 } },
