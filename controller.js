@@ -7,9 +7,9 @@ const dns = require("dns");
 
 // POST request to /api/shorturl/
 exports.add_new_url = [
-  console.log(`Submitted URL: ${req.body.url}`),
   // check for protocol and WWW
   (req, res, next) => {
+    console.log(`Submitted URL: ${req.body.url}`);
     const url = new URL(req.body.url);
     if (!url.protocol.startsWith("http")) {
       return res.json({ error: "invalid url" });
