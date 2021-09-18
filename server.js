@@ -1,42 +1,38 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 const app = express();
+const router = require('./routes');
 
-// Require routes
-const router = require("./routes");
-
-// Mongoose Configuration
-const mongoose = require("mongoose");
-const MONGO_URI = process.env["MONGO_URI"];
+// Mongoose configuration
+const mongoose = require('mongoose');
+const MONGO_URI = process.env['MONGO_URI'];
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Basic Configuration
-const port = process.env.PORT || 3000;
-
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 app.use(cors());
+app.use('/public', express.static(`${process.cwd()}/public`));
 
-app.use("/public", express.static(`${process.cwd()}/public`));
+// Routes
 
-// root handler
-app.get("/", function (req, res) {
-  res.sendFile(process.cwd() + "/views/index.html");
+// Home page
+app.get('/', (req, res) => {
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// api handler
-app.use("/api/shorturl", router);
+// API
+app.use('/api/shorturl', router);
 
-app.listen(port, function () {
-  console.log(`Listening on port ${port}`);
+// Listener
+const listener = app.listen(process.env.PORT || 3000, () => {
+  console.log('Your app is listening on port ' + listener.address().port);
 });

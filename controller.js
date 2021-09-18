@@ -1,65 +1,56 @@
-// require mongoose models
-const URLModel = require("./models/urls");
-const counter = require("./models/counter");
+// Mongoose models
+const URLS = require('./models/url');
+const Counter = require('./models/counter');
 
-// require DNS module
-const dns = require("dns");
+const dns = require('dns');
+const dnsPromises = dns.promises;
 
-// POST request to /api/shorturl/
-exports.add_new_url = [
-  // check for protocol and WWW
-  (req, res, next) => {
-    console.log(`Submitted URL: ${req.body.url}`);
+const verifyURL = (req, res, next) => { // checks that URL is valid
+  try {
     const url = new URL(req.body.url);
-    if (!url.protocol.startsWith("http")) {
-      return res.json({ error: "invalid url" });
-    }
-    // console.log(`URL is ${req.body.url}`);
-    req.body.hostName = new URL(req.body.url).hostname.replace("www.", "");
-    // console.log(`host name is: ${req.body.hostName}`);
-    return next();
-  },
-  // verify submitted href
-  (req, res, next) => {
-    dns.lookup(req.body.hostName, (err) => {
-      // console.log(`THIS IS THE ERROR: ${err}`);
-      if (err) return res.json({ error: "invalid url" });
-    });
-    return next();
-  },
-  // process request
-  (req, res, next) => {
-    // get a new number
-    counter.findOneAndUpdate(
-      { _id: "URL Counter" },
-      { $inc: { seq_value: 1 } },
-      { returnNewDocument: true, upsert: true },
-      (err, data) => {
-        if (err) return console.error(err);
-        const url = new URLModel({
-          original_url: req.body.url,
-          short_url: data.seq_value,
-        });
-        url.save((err, data) => {
-          if (err) return console.error(err);
-          res.json({
-            original_url: data.original_url,
-            short_url: data.short_url,
-          });
-        });
-      }
-    );
-  },
-];
-
-// GET request to api/shorturl/:short_url
-exports.redir_to_url = (req, res, next) => {
-  URLModel.findOne(
-    { short_url: req.params.short_url },
-    "original_url",
-    (err, data) => {
-      if (err) return console.error(err);
-      res.redirect(data.original_url);
-    }
-  );
+    req.body.hostName = url.hostname.replace('www.', '');
+    next();
+  } catch (err) {
+    console.error(err);
+    res.json({error: 'invalid url'});
+  }
 };
+
+const resolveHost = (req, res, next) => { // checks that URL exists
+  dnsPromises.lookup(req.body.hostName).catch((err) => {
+    console.error(err);
+    res.json({error: 'invalid url'});
+  });
+  next();
+};
+
+const processRequest = async (req, res, next) => {
+  count = await Counter.findOneAndUpdate( // gets current count for short URL
+      {_id: 'URL Counter'},
+      {$inc: {seq_value: 1}},
+      {returnNewDocument: true,
+        upsert: true},
+  ).exec();
+
+  const url = new URLS({
+    original_url: req.body.url,
+    short_url: count.seq_value,
+  });
+
+  const newURL = await url.save();
+
+  res.json({
+    original_url: newURL.original_url,
+    short_url: newURL.short_url,
+  });
+};
+
+const postURL = [verifyURL, resolveHost, processRequest];
+
+const getURL = async (req, res, next) => { // redirects to original URL
+  const url = await URLS.findOne({short_url: req.params.short_url},
+      'original_url').exec();
+  res.redirect(url.original_url);
+};
+
+module.exports = {postURL, getURL};

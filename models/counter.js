@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
 const CounterSchema = new Schema({
-  _id: { type: String },
-  seq_value: { type: Number, required: true },
+  _id: {type: String},
+  seq_value: {type: Number, required: true},
 });
 
-module.exports = mongoose.model("counter", CounterSchema);
+module.exports = mongoose.model('counter', CounterSchema);
