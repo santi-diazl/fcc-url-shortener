@@ -6,8 +6,13 @@ const dns = require('dns');
 const dnsPromises = dns.promises;
 
 const verifyURL = (req, res, next) => { // checks that URL is valid
-  try {
+  try { // if  URL parsing fails, it will be caught
     const url = new URL(req.body.url);
+    // if URL is valid but missing www (FCC requirement), throw error
+    if (!url.toString().includes('www')) {
+      throw new Error('no www in URL');
+    }
+    // remove www for dns.lookup() in next middleware function
     req.body.hostName = url.hostname.replace('www.', '');
     next();
   } catch (err) {
@@ -16,7 +21,7 @@ const verifyURL = (req, res, next) => { // checks that URL is valid
   }
 };
 
-const resolveHost = (req, res, next) => { // checks that URL exists
+const resolveHost = (req, res, next) => { // checks that URL points to real host
   dnsPromises.lookup(req.body.hostName).catch((err) => {
     console.error(err);
     res.json({error: 'invalid url'});
