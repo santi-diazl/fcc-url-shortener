@@ -11,10 +11,12 @@ const asyncRoute = (route) => (req, res, next) =>
 
 // Controller
 const controller = require('./controller');
+const postFunctions = controller.postURL;
+[verifyWWW, parseURL, resolveHost, processRequest] =
+  [postFunctions[0], postFunctions[1], postFunctions[2], postFunctions[3]];
 
 // POST - new URL
-router.post('/', controller.postURL[0], controller.postURL[1],
-    asyncRoute(controller.postURL[2]));
+router.post('/', verifyWWW, parseURL, resolveHost, asyncRoute(processRequest));
 
 // GET -  short URL and redirect
 router.get('/:short_url', controller.getURL);
