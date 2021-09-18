@@ -9,9 +9,9 @@ const verifyURL = (req, res, next) => { // checks that URL is valid
   try { // if  URL parsing fails, it will be caught
     const url = new URL(req.body.url);
     // if URL is valid but missing www (FCC requirement), throw error
-    if (!url.toString().includes('www')) {
-      throw new Error('no www in URL');
-    }
+    // if (!url.toString().includes('www')) {
+    //   throw new Error('no www in URL');
+    // }
     // remove www for dns.lookup() in next middleware function
     req.body.hostName = url.hostname.replace('www.', '');
     next();
