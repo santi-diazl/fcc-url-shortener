@@ -6,6 +6,7 @@ const dns = require('dns');
 const dnsPromises = dns.promises;
 
 const verifyWWW = (req, res, next) => { // check that URL provided contains www
+  console.log(`URL entered: ${req.body.url}`);
   // fcc requirement
   const url = req.body.url;
   if (!url.includes('www')) {
