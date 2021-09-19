@@ -58,7 +58,7 @@ const processRequest = async (req, res, next) => {
   });
 };
 
-const postURL = [verifyWWW, parseURL, resolveHost, processRequest];
+const postURL = [/*verifyWWW,*/ parseURL, resolveHost, processRequest];
 
 const getURL = async (req, res, next) => { // redirects to original URL
   const url = await URLS.findOne({short_url: req.params.short_url},
