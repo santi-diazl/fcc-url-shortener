@@ -6,6 +6,7 @@ const dns = require('dns');
 const dnsPromises = dns.promises;
 // checks that input URL is valid
 const parseURL = (req, res, next) => {
+  console.log(`input URL is: ${req.body.url}`);
   try {
     // if  URL parsing fails, will be caught by catch
     const url = new URL(req.body.url);
