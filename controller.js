@@ -5,18 +5,19 @@ const Counter = require('./models/counter');
 const dns = require('dns');
 const dnsPromises = dns.promises;
 
-const verifyWWW = (req, res, next) => { // check that URL provided contains www
-  console.log(`URL entered: ${req.body.url}`);
-  // fcc requirement
-  const url = req.body.url;
-  if (!url.includes('www')) {
-    console.error('www not in URL provided');
-    return res.json({error: 'invalid url'});
-  }
-  next();
-};
+// const verifyWWW = (req, res, next) => { // check that URL provided contains www
+//   console.log(`URL entered: ${req.body.url}`);
+//   // fcc requirement
+//   const url = req.body.url;
+//   if (!url.includes('www')) {
+//     console.error('www not in URL provided');
+//     return res.json({error: 'invalid url'});
+//   }
+//   next();
+// };
 
 const parseURL = (req, res, next) => { // checks that URL is valid
+  console.log(`URL entered: ${req.body.url}`);
   try { // if  URL parsing fails, will be caught by catch
     const url = new URL(req.body.url);
     // remove www for dns.lookup() in next middleware function
