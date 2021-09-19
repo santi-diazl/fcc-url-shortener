@@ -47,7 +47,7 @@ const processReq = async (req, res, next) => {
   // save original and short
   const newURL = await new URLS({
     original_url: req.body.url,
-    short_url: count.seq_value,
+    short_url: currentCount.seq_value,
   }).save();
   // respond
   res.json({
