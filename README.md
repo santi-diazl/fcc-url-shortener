@@ -4,5 +4,5 @@ A microservice that allows users to save URLs with a POST request to /api/shortu
 
 This [demo version](https://sdiaz-url-shortener.herokuapp.com/) will pass all 4 of FCC's [required user stories](https://www.freecodecamp.org/learn/back-end-development-and-apis/back-end-development-and-apis-projects/url-shortener-microservice).
 
-![freeCodeCamp URL Shortener API.](https://github.com/santi-diazl/url-shortener-api/raw/main/screenshot.png)
+![freeCodeCamp URL Shortener API.](https://github.com/santidiazl/url-shortener-api/raw/main/screenshot.png)
 
